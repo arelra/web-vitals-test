@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Web Vitals Test</title>
+</head>
+
+<body>
+    <h1>Web Vitals Reporting Test</h1>
+    <a href="test2.html">Go to Test Page 2</a>
+    <p />
+    <button onclick="insertSquare();insertSquare();">Insert stuff</button>
+    <p>Open the dev tools → Network tab to see the requests being sent.</p>
+    <p id="inserthere" style="height:500px; background-color:cadetblue;">Lorem ipsum dolor sit amet consectetur
+        adipisicing elit. Dolorum est
+        deleniti ratione, quis
+        atque cupiditate
+        voluptate, totam nemo quisquam repellat praesentium earum sunt dolores repudiandae pariatur? Minima, autem
+        perspiciatis? Perspiciatis.</p>
+
+    <script src="https://unpkg.com/web-vitals@latest/dist/web-vitals.iife.js"></script>
+    <script>
+        console.log('======================================');
+
+        function insertSquare() {
+            const square = document.createElement('div');
+            square.style.width = '300px';
+            square.style.height = '300px';
+            square.style.backgroundColor = 'blue';
+            square.style.margin = '10px 0';
+
+            const pos = document.querySelector('#inserthere');
+            pos.parentNode.insertBefore(square, pos);
+        }
+
+        function addToPayload(metric) {
+            window.payload = window.payload || [];
+            window.payload.push(metric);
+            console.log('metric:', { ...window.payload });
+        }
+
+        function sendToServer(method) {
+            // Log the metric for debug
+            console.log('Sending payload:', window.payload);
+            const data = JSON.stringify({ method, paylad: window.payload });
+            const url = 'http://localhost:3050/stats';
+
+            // sendBeacon
+            // const beaconSent = navigator.sendBeacon && navigator.sendBeacon(url, data);
+
+            // fetch
+            fetch(url, {
+                method: 'POST',
+                body: data,
+                keepalive: true,
+                cors: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                console.log('Fetch response:', response.status);
+            }).catch(err => {
+                console.error('Fetch error:', err);
+            });
+        }
+
+        window.addEventListener('beforeunload', function () {
+            console.log('beforeunload event triggered');
+            if (window.payload && window.payload.length > 0) {
+                sendToServer('beforeunload');
+            }
+        });
+
+        window.addEventListener('visibilitychange', function () {
+            console.log('visibilitychange event triggered');
+            if (window.payload && window.payload.length > 0 && document.visibilityState === 'hidden') {
+                sendToServer('visibilitychange');
+            }
+        });
+
+        // Load metrics
+        webVitals.onCLS(addToPayload);
+        webVitals.onFID(addToPayload);
+        webVitals.onLCP(addToPayload);
+        webVitals.onFCP(addToPayload);
+        webVitals.onTTFB(addToPayload);
+        webVitals.onINP(addToPayload);
+    </script>
+</body>
+
+</html>

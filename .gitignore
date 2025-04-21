@@ -1,0 +1,58 @@
+# Environment Variables
+.env
+
+### Node template
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules
+.yarn
+
+# IDE files
+.idea
+.zed
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.recommended
+!.vscode/settings.json.required
+!.vscode/dcr.code-snippets
+.metals/
+*.iml
+
+# System files
+.DS_Store
+
+# Built files
+dist
+jsconfig.json
+target
+
+# Test coverage reports
+coverage
+
+# Storybook static folder (used if taking snapshots locally)
+/storybook-static
+**/storybook-static
+
+# Architecture Diagram
+webArchitecture.svg
+
+# lighthouse results from local build
+.lighthouseci/
+
+# ESLint reports
+.eslint/
+.eslintcache
+
+# k6 load testing binaries
+k6-v*arm64
+
+# playwright
+test-results/
+playwright-report/
+playwright/.cache/

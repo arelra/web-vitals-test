@@ -8,7 +8,7 @@
 
 <body>
     <h1>Web Vitals Reporting Test</h1>
-    <a href="test2.html">Go to Test Page 2</a>
+    <a href="/test2.html">Go to Test Page 2</a>
     <p />
     <button onclick="insertSquare();insertSquare();">Insert stuff</button>
     <p>Open the dev tools → Network tab to see the requests being sent.</p>
@@ -43,34 +43,34 @@
         function sendToServer(method) {
             // Log the metric for debug
             console.log('Sending payload:', window.payload);
-            const data = JSON.stringify({ method, paylad: window.payload });
+            const data = JSON.stringify({ method, time: Date.now(), payload: window.payload });
             const url = 'http://localhost:3050/stats';
 
             // sendBeacon
-            // const beaconSent = navigator.sendBeacon && navigator.sendBeacon(url, data);
+            const beaconSent = navigator.sendBeacon && navigator.sendBeacon(url, data);
 
             // fetch
-            fetch(url, {
-                method: 'POST',
-                body: data,
-                keepalive: true,
-                cors: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                console.log('Fetch response:', response.status);
-            }).catch(err => {
-                console.error('Fetch error:', err);
-            });
+            // fetch(url, {
+            //     method: 'POST',
+            //     body: data,
+            //     keepalive: true,
+            //     cors: 'no-cors',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     }
+            // }).then(response => {
+            //     console.log('Fetch response:', response.status);
+            // }).catch(err => {
+            //     console.error('Fetch error:', err);
+            // });
         }
 
-        window.addEventListener('beforeunload', function () {
-            console.log('beforeunload event triggered');
-            if (window.payload && window.payload.length > 0) {
-                sendToServer('beforeunload');
-            }
-        });
+        // window.addEventListener('beforeunload', function () {
+        //     console.log('beforeunload event triggered');
+        //     if (window.payload && window.payload.length > 0) {
+        //         sendToServer('beforeunload');
+        //     }
+        // });
 
         window.addEventListener('visibilitychange', function () {
             console.log('visibilitychange event triggered');

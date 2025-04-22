@@ -38,6 +38,8 @@ app.post("/stats", (req, res) => {
 
     // Log the parsed data
     console.log(data.method);
+    console.log(`time: ${data.time}`);
+    console.log(`payload length: ${data.payload.length}`);
 
     // Send a success response
     res.status(200).send("Stats received");
@@ -48,8 +50,12 @@ app.post("/stats", (req, res) => {
 });
 
 // Ensure all routes not handled before are sent to index.html
-app.get("/{*url}", (req, res) => {
+app.get("/test.html", (req, res) => {
   res.sendFile(path.join(__dirname, "test.html"));
+});
+
+app.get("/test2.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "test2.html"));
 });
 
 // Start the server
